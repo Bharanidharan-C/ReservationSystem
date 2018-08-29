@@ -56,10 +56,13 @@ public class BookingService {
 	}
 	
 	Booking addReservation(BookingDTO toBook) throws Exception{
-		 int reservedCount = bookingRepository.findAvailability(toBook.getResourceId(), Date.valueOf(toBook.getBookingDate()),toBook.getBookingSlot());
+		String a[] = toBook.getBookingDate().split("-");
+		Date date = new Date(Integer.parseInt(a[2]),Integer.parseInt(a[2]), Integer.parseInt(a[2]));
+		
+		 int reservedCount = bookingRepository.findAvailability(toBook.getResourceId(), date,toBook.getBookingSlot());
 		 if(reservedCount ==0) {
 			 resourceRepository.findById(toBook.getResourceId()).map(resource ->{
-				 Booking booking = new Booking(Date.valueOf(toBook.getBookingDate()), toBook.getBookingSlot(), resource);
+				 Booking booking = new Booking(date, toBook.getBookingSlot(), resource);
 				return bookingRepository.save(booking);
 			 }).orElseThrow(() -> new Exception("resourceId " + toBook.getResourceId() + " not available"));
 		 }
