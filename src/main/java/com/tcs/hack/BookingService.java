@@ -1,6 +1,7 @@
 package com.tcs.hack;
 
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
+import com.tcs.hack.dto.BookingDTO;
 import com.tcs.hack.model.Booking;
 import com.tcs.hack.model.Resource;
 import com.tcs.hack.repository.BookingRepository;
@@ -53,13 +55,13 @@ public class BookingService {
 		return bookingRepository.findAll();
 	}
 	
-	Booking addReservation(int resourceId, Booking booking) throws Exception{
-		 int reservedCount = bookingRepository.findAvailability(resourceId, booking.getBookingDate(),booking.getBookingSlot());
+	Booking addReservation(BookingDTO toBook) throws Exception{
+		 int reservedCount = bookingRepository.findAvailability(toBook.getResourceId(), Date.valueOf(toBook.getBookingDate()),toBook.getBookingSlot());
 		 if(reservedCount ==0) {
-			 resourceRepository.findById(resourceId).map(resource ->{
-				 booking.setResource(resource);
+			 resourceRepository.findById(toBook.getResourceId()).map(resource ->{
+				 Booking booking = new Booking(Date.valueOf(toBook.getBookingDate()), toBook.getBookingSlot(), resource);
 				return bookingRepository.save(booking);
-			 }).orElseThrow(() -> new Exception("resourceId " + resourceId + " not found"));
+			 }).orElseThrow(() -> new Exception("resourceId " + toBook.getResourceId() + " not available"));
 		 }
 		 return null;
 	}

@@ -6,15 +6,17 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tcs.hack.dto.BookingDTO;
 import com.tcs.hack.model.Booking;
 import com.tcs.hack.model.Resource;
 import com.tcs.hack.repository.BookingRepository;
@@ -44,6 +46,7 @@ Resource getResource(@PathVariable int id) {
  }
  
 @PostMapping("/tcs/hack/v1/resources")
+@ResponseStatus(HttpStatus.CREATED)
  Resource addResource(@Valid @RequestBody Resource r) {
 	
 	 return bookingService.addResource(r);
@@ -65,8 +68,9 @@ Iterable<Booking> getAllBookings(){
 }
 
 @PostMapping("/tcs/hack/v1/reservations")
-Booking addReservation(@Valid @RequestBody int resourceId, @Valid @RequestBody Booking booking) throws Exception {
-	return bookingService.addReservation(resourceId, booking);
+@ResponseStatus(HttpStatus.CREATED)
+Booking addReservation( @Valid @RequestBody BookingDTO bookingDTO) throws Exception {
+	return bookingService.addReservation(bookingDTO);
 }
 
 

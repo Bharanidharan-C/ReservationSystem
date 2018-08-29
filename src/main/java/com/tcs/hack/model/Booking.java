@@ -21,6 +21,17 @@ public class Booking {
 	@Column(name="booking_id",nullable=false)
 	private int bookingId;
 	
+	public Booking(Date bookingDate, String bookingSlot, Resource resource) {
+		super();
+		this.bookingDate = bookingDate;
+		this.bookingSlot = bookingSlot;
+		this.resource = resource;
+	}
+	
+	public Booking() {
+		super();
+	}
+	
 	@Column(name="booking_date",nullable=false)
 	private Date bookingDate;
 	
