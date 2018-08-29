@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.config.ResourceNotFoundException;
+
 import org.springframework.stereotype.Service;
 
 import com.tcs.hack.model.Booking;
@@ -13,7 +13,7 @@ import com.tcs.hack.model.Resource;
 import com.tcs.hack.repository.BookingRepository;
 import com.tcs.hack.repository.ResourceRepository;
 
-@Service("bookingService")
+@Service
 public class BookingService { 
 	
 	@Autowired
@@ -27,7 +27,8 @@ public class BookingService {
 	}
 	
 	 Resource getResource(int id) {
-		 return resourceRepository.findById(id).get();
+		Resource r = resourceRepository.findById(id).get();
+		return r;
 	 }
 	 
 	 Resource addResource(Resource r) {
@@ -35,11 +36,11 @@ public class BookingService {
 		 return resourceRepository.save(r);
 	 }
 	 
-	 Resource updateResource(int resourceId,Resource updatedResource) {
+	 Resource updateResource(int resourceId,Resource updatedResource) throws Exception{
 		 return resourceRepository.findById(resourceId).map(resource -> {
 	            resource.setResourceName(updatedResource.getResourceName());
 	            return resourceRepository.save(resource);
-	        }).orElseThrow(() -> new ResourceNotFoundException("PostId " + resourceId + " not found", null));
+	        }).orElseThrow(() -> new Exception("PostId " + resourceId + " not found", null));
 	 }
 	
 	
@@ -52,13 +53,13 @@ public class BookingService {
 		return bookingRepository.findAll();
 	}
 	
-	Booking addReservation(int resourceId, Booking booking) {
+	Booking addReservation(int resourceId, Booking booking) throws Exception{
 		 int reservedCount = bookingRepository.findAvailability(resourceId, booking.getBookingDate(),booking.getBookingSlot());
 		 if(reservedCount ==0) {
 			 resourceRepository.findById(resourceId).map(resource ->{
 				 booking.setResource(resource);
 				return bookingRepository.save(booking);
-			 }).orElseThrow(() -> new ResourceNotFoundException("resourceId " + resourceId + " not found", null));
+			 }).orElseThrow(() -> new Exception("resourceId " + resourceId + " not found"));
 		 }
 		 return null;
 	}

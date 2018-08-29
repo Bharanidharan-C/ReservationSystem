@@ -21,13 +21,11 @@ import com.tcs.hack.repository.BookingRepository;
 import com.tcs.hack.repository.ResourceRepository;
 
 @RestController
-@RequestMapping("/tcs/hack/v1")
 public class Controller {
 	
 
 
 @Autowired
-@Qualifier("bookingService")
 BookingService bookingService;
 
 @GetMapping("/tcs/hack/v1/resources")
@@ -37,7 +35,12 @@ Iterable<Resource> findAllResorces() {
 
 @GetMapping("/tcs/hack/v1/resources/{id}")
 Resource getResource(@PathVariable int id) {
+	try
+	{
 	 return bookingService.getResource(id);
+	}catch(Exception e) {
+		return null;
+	}
  }
  
 @PostMapping("/tcs/hack/v1/resources")
@@ -46,8 +49,8 @@ Resource getResource(@PathVariable int id) {
 	 return bookingService.addResource(r);
 }
 
-@PostMapping("/tcs/hack/v1/resources")
- Resource updateResource(int resourceId,Resource updatedResource) {
+@PostMapping("/tcs/hack/v1/resources/{resourceId}")
+ Resource updateResource(@PathVariable int resourceId,Resource updatedResource) throws Exception {
 	 return bookingService.updateResource(resourceId, updatedResource);
  }
 
@@ -62,7 +65,7 @@ Iterable<Booking> getAllBookings(){
 }
 
 @PostMapping("/tcs/hack/v1/reservations")
-Booking addReservation(@Valid @RequestBody int resourceId, @Valid @RequestBody Booking booking) {
+Booking addReservation(@Valid @RequestBody int resourceId, @Valid @RequestBody Booking booking) throws Exception {
 	return bookingService.addReservation(resourceId, booking);
 }
 

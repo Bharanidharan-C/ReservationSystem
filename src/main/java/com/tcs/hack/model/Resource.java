@@ -28,7 +28,7 @@ public class Resource {
 	}
 	
 	public Resource() {
-		// TODO Auto-generated constructor stub
+		super();
 	}
 	public int getResourceId() {
 		return resourceId;
